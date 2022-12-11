@@ -3,6 +3,9 @@ name: main
 
 on:
   workflow_dispatch:
+    push:
+        branches:
+        - "main"
   push:
     branches:
       - 'master'
@@ -19,7 +22,7 @@ jobs:
       - name: Set config
         run: |
           echo "${{ secrets.GITEA_SECRET }}" > ~/deploy_key
-          chmod 600 ~/deploy_key.pem
+          chmod 600 ~/deploy_key
           git config --local user.email "github@actions"
           git config --local user.name "github"
       - name: Push changes
