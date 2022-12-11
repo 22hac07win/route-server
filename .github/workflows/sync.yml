@@ -21,13 +21,13 @@ jobs:
         uses: actions/checkout@v2
       - name: Set config
         run: |
-          echo "${{ secrets.GITEA_SECRET }}" > ~/deploy_key
-          chmod 600 ~/deploy_key
+          echo "${{ secrets.GITEA_SECRET }}" > ~/deploy_key.pem
+          chmod 600 ~/deploy_key.pem
           git config --local user.email "github@actions"
           git config --local user.name "github"
       - name: Push changes
         env:
-          GIT_SSH_COMMAND: ssh -i ~/deploy_key -o StrictHostKeyChecking=no -F /dev/null
+          GIT_SSH_COMMAND: ssh -i ~/deploy_key.pem -o StrictHostKeyChecking=no -F /dev/null
         run: |
           git fetch --unshallow origin
           git push -f ${{ env.GITEA_SSH_URL }}
