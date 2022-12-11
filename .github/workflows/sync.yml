@@ -2,13 +2,9 @@
 name: main
 
 on:
-  workflow_dispatch:
-    push:
-        branches:
-        - "main"
   push:
     branches:
-      - 'master'
+      - "main"
 
 env:
   GITEA_SSH_URL: 'ssh://git@git.trap.jp:2200/22hac07win/route-server.git'
