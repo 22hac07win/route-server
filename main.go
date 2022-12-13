@@ -119,7 +119,7 @@ func main() {
 			})
 		})
 
-		api.GET("/message", func(c *gin.Context) {
+		api.POST("/message", func(c *gin.Context) {
 			c.JSON(http.StatusOK, gin.H{
 				"message": "message",
 			})
