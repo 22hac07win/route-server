@@ -108,14 +108,20 @@ func main() {
 		})
 	})
 
-	private := r.Group("/private")
-	private.Use(authMiddleware())
+	api := r.Group("/api")
+	api.Use(authMiddleware())
 	{
-		private.GET("/ping", func(c *gin.Context) {
+		api.GET("/ping", func(c *gin.Context) {
 
 			message := fmt.Sprintf("Your userID is %s", c.GetString("userID"))
 			c.JSON(http.StatusOK, gin.H{
 				"message": message,
+			})
+		})
+
+		api.GET("/message", func(c *gin.Context) {
+			c.JSON(http.StatusOK, gin.H{
+				"message": "message",
 			})
 		})
 	}
