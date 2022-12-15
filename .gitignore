@@ -17,4 +17,4 @@
 .idea
 *.json
 
-.env
+env.sh
