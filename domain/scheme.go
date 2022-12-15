@@ -1,22 +1,22 @@
 package domain
 
 type ApiRequest struct {
-	NextID string `json:"next_id"`
-	Input  string `json:"input"`
-	Option string `json:"option"`
+	NextID     string `json:"nextId"`
+	Input      string `json:"input"`
+	OptionText string `json:"option"`
 }
 
 type ResOption struct {
-	OptionalNumber int    `json:"optional_number"`
-	OptionalText   string `json:"optional_text"`
-	NextBlockID    string `json:"next_block_id"`
+	OptionNumber int    `json:"optionNumber"`
+	OptionText   string `json:"optionText"`
+	NextBlockID  string `json:"nextBlockId"`
 }
 
 type ApiResponse struct {
 	ID        string      `json:"id"`
-	BlockType BlockType   `json:"block_type"`
+	BlockType BlockType   `json:"blockType"`
 	Text      string      `json:"text"`
-	IsInput   bool        `json:"is_input"`
+	HaveInput bool        `json:"haveInput"`
 	Options   []ResOption `json:"options"`
-	NextID    string      `json:"next_id"`
+	NextID    string      `json:"nextId"`
 }
