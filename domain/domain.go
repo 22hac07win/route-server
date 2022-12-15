@@ -1,7 +1,6 @@
 package domain
 
 import (
-	"github.com/22hac07win/route-server.git/router"
 	"time"
 )
 
@@ -29,7 +28,7 @@ const (
 )
 
 type Block interface {
-	GetContent() (*router.ApiResponse, error)
+	GetContent() (*ApiResponse, error)
 }
 
 type TextBlock struct {

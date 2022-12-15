@@ -2,11 +2,31 @@ package db
 
 import (
 	"github.com/22hac07win/route-server.git/domain"
+	"os"
 )
 
+type SupabaseDBClient struct {
+	Url    string
+	apiKey string
+}
+
+func NewSupabaseDBClient() *SupabaseDBClient {
+	url := os.Getenv("SUPABASE_URL")
+	apiKey := os.Getenv("SUPABASE_API_KEY")
+
+	return &SupabaseDBClient{
+		Url:    url,
+		apiKey: apiKey,
+	}
+}
+
+type InsertDBUser struct {
+	ID string `json:"id"`
+}
+
 type DBUser struct {
-	ID        string
-	CreatedAt string
+	ID        string `json:"id"`
+	CreatedAt string `json:"created_at"`
 }
 
 type DBStory struct {
@@ -32,6 +52,12 @@ const (
 	InputStore  StoreType = "input"
 	OptionStore StoreType = "option"
 )
+
+type InsertDBStore struct {
+	StoreType StoreType `json:"store_type"`
+	UserID    string    `json:"user_id"`
+	Body      string    `json:"body"`
+}
 
 type DBStore struct {
 	ID        string    `json:"id"`

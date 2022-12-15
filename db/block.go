@@ -7,23 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"io"
 	"net/http"
-	"os"
 )
-
-type SupabaseDBClient struct {
-	Url    string
-	apiKey string
-}
-
-func NewSupabaseDBClient() *SupabaseDBClient {
-	url := os.Getenv("SUPABASE_URL")
-	apiKey := os.Getenv("SUPABASE_API_KEY")
-
-	return &SupabaseDBClient{
-		Url:    url,
-		apiKey: apiKey,
-	}
-}
 
 func (s *SupabaseDBClient) GetBlock(c *gin.Context, blocId string) (*domain.Block, error) {
 	b, err := s.GetDBBlock(c, blocId)
@@ -67,7 +51,7 @@ func (s *SupabaseDBClient) GetBlock(c *gin.Context, blocId string) (*domain.Bloc
 }
 
 func (s *SupabaseDBClient) GetDBBlock(c *gin.Context, blockId string) (*DBBlock, error) {
-	url := fmt.Sprintf("%s/rest/v1/blocks/id=%s", s.Url, blockId)
+	url := fmt.Sprintf("%s/rest/v1/block?id=%s", s.Url, blockId)
 	req, _ := http.NewRequest("GET", url, nil)
 	req.Header.Add("apikey", s.apiKey)
 	req.Header.Add("Authorization", "Bearer "+s.apiKey)

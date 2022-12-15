@@ -1,13 +1,15 @@
 package router
 
 import (
+	"net/http"
+
+	"github.com/22hac07win/route-server.git/domain"
 	"github.com/22hac07win/route-server.git/service"
 	"github.com/gin-gonic/gin"
-	"net/http"
 )
 
 func PostMessage(c *gin.Context) {
-	var req ApiRequest
+	var req domain.ApiRequest
 	if err := c.BindJSON(&req); err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return

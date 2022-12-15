@@ -6,14 +6,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func GetNextBlock(c *gin.Context, nextId string) (*domain.Block, error) {
+func GetNextBlock(c *gin.Context, nextId string) (domain.Block, error) {
 	sc := db.NewSupabaseDBClient()
 	block, err := sc.GetBlock(c, nextId)
 	if err != nil {
 		return nil, err
 	}
 
-	return block, nil
+	return *block, nil
 }
 
 func GetNextStory(c *gin.Context) (*domain.Story, error) {

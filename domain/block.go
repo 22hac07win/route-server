@@ -1,11 +1,7 @@
 package domain
 
-import (
-	"github.com/22hac07win/route-server.git/router"
-)
-
-func (b *TextBlock) GetContent() (*router.ApiResponse, error) {
-	res := &router.ApiResponse{
+func (b *TextBlock) GetContent() (*ApiResponse, error) {
+	res := &ApiResponse{
 		ID:        b.ID,
 		BlockType: TextBlockType,
 		Text:      b.Text,
@@ -15,7 +11,7 @@ func (b *TextBlock) GetContent() (*router.ApiResponse, error) {
 	return res, nil
 }
 
-func (b *FunctionBlock) GetContent() (*router.ApiResponse, error) {
+func (b *FunctionBlock) GetContent() (*ApiResponse, error) {
 
 	f := b.Function
 	text, err := f()
@@ -24,7 +20,7 @@ func (b *FunctionBlock) GetContent() (*router.ApiResponse, error) {
 		return nil, err
 	}
 
-	res := &router.ApiResponse{
+	res := &ApiResponse{
 		ID:        b.ID,
 		BlockType: FunctionBlockType,
 		Text:      text,
@@ -34,8 +30,8 @@ func (b *FunctionBlock) GetContent() (*router.ApiResponse, error) {
 	return res, nil
 }
 
-func (b *InputBlock) GetContent() (*router.ApiResponse, error) {
-	res := &router.ApiResponse{
+func (b *InputBlock) GetContent() (*ApiResponse, error) {
+	res := &ApiResponse{
 		ID:        b.ID,
 		BlockType: InputBlockType,
 		Text:      b.Text,
@@ -45,17 +41,17 @@ func (b *InputBlock) GetContent() (*router.ApiResponse, error) {
 	return res, nil
 }
 
-func (b *OptionBlock) GetContent() (*router.ApiResponse, error) {
-	var opts []router.ResOption
+func (b *OptionBlock) GetContent() (*ApiResponse, error) {
+	var opts []ResOption
 	for _, v := range b.Options {
-		opt := router.ResOption{
+		opt := ResOption{
 			OptionalNumber: v.OptionNumber,
 			OptionalText:   v.OptionText,
 		}
 		opts = append(opts, opt)
 	}
 
-	res := &router.ApiResponse{
+	res := &ApiResponse{
 		ID:        b.ID,
 		BlockType: OptionBlockType,
 		Text:      b.Text,
