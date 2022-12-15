@@ -9,18 +9,12 @@ import (
 	"net/http"
 )
 
-func (s *SupabaseDBClient) InsertDBUser(c *gin.Context, userID string) error {
-	url := fmt.Sprintf("%s/rest/v1/user", s.Url)
-
-	user := InsertDBUser{
-		ID: userID,
-	}
-
-	body, err := json.Marshal(user)
+func (s *SupabaseDBClient) AddDBStore(c *gin.Context, data *DBStore) error {
+	url := fmt.Sprintf("%s/rest/v1/store", s.Url)
+	body, err := json.Marshal(data)
 	if err != nil {
 		return err
 	}
-
 	reader := bytes.NewReader(body)
 
 	req, _ := http.NewRequest("POST", url, reader)
@@ -36,9 +30,8 @@ func (s *SupabaseDBClient) InsertDBUser(c *gin.Context, userID string) error {
 	return err
 }
 
-func (s *SupabaseDBClient) GetDBUser(c *gin.Context, userID string) (*DBUser, error) {
-	url := fmt.Sprintf("%s/rest/v1/user?id=eq.%s", s.Url, userID)
-
+func (s *SupabaseDBClient) GetRecentDBStore(c *gin.Context, userID string) (*DBUser, error) {
+	url := fmt.Sprintf("%s/rest/v1/store?user_id=eq.%s&order=id.desc&limit=10", s.Url, userID)
 	req, _ := http.NewRequest("GET", url, nil)
 	req.Header.Add("ApiKey", s.ApiKey)
 	req.Header.Add("Authorization", "Bearer "+s.ApiKey)
@@ -49,14 +42,12 @@ func (s *SupabaseDBClient) GetDBUser(c *gin.Context, userID string) (*DBUser, er
 		return nil, err
 	}
 
-	var res []DBUser
+	var res DBUser
 	body, err := io.ReadAll(resp.Body)
-
 	if err != nil {
 		return nil, err
 	}
 
 	json.Unmarshal(body, &res)
-
-	return &res[0], nil
+	return &res, nil
 }

@@ -7,16 +7,16 @@ import (
 
 type SupabaseDBClient struct {
 	Url    string
-	apiKey string
+	ApiKey string
 }
 
 func NewSupabaseDBClient() *SupabaseDBClient {
 	url := os.Getenv("SUPABASE_URL")
-	apiKey := os.Getenv("SUPABASE_API_KEY")
+	ApiKey := os.Getenv("SUPABASE_API_KEY")
 
 	return &SupabaseDBClient{
 		Url:    url,
-		apiKey: apiKey,
+		ApiKey: ApiKey,
 	}
 }
 

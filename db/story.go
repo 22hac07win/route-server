@@ -11,8 +11,8 @@ import (
 func (s *SupabaseDBClient) GetAllDBStory(c *gin.Context) ([]*DBStory, error) {
 	url := fmt.Sprintf("%s/rest/v1/story/select=*", s.Url)
 	req, _ := http.NewRequest("GET", url, nil)
-	req.Header.Add("apikey", s.apiKey)
-	req.Header.Add("Authorization", "Bearer "+s.apiKey)
+	req.Header.Add("ApiKey", s.ApiKey)
+	req.Header.Add("Authorization", "Bearer "+s.ApiKey)
 
 	client := new(http.Client)
 	resp, err := client.Do(req)

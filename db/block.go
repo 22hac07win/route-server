@@ -51,10 +51,10 @@ func (s *SupabaseDBClient) GetBlock(c *gin.Context, blocId string) (*domain.Bloc
 }
 
 func (s *SupabaseDBClient) GetDBBlock(c *gin.Context, blockId string) (*DBBlock, error) {
-	url := fmt.Sprintf("%s/rest/v1/block?id=%s", s.Url, blockId)
+	url := fmt.Sprintf("%s/rest/v1/block?id=eq.%s", s.Url, blockId)
 	req, _ := http.NewRequest("GET", url, nil)
-	req.Header.Add("apikey", s.apiKey)
-	req.Header.Add("Authorization", "Bearer "+s.apiKey)
+	req.Header.Add("ApiKey", s.ApiKey)
+	req.Header.Add("Authorization", "Bearer "+s.ApiKey)
 
 	client := new(http.Client)
 	resp, err := client.Do(req)
