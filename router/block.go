@@ -16,7 +16,12 @@ func PostMessage(c *gin.Context) {
 	}
 	var nextId string
 	if req.NextID == "" {
-		return
+		story, err := service.GetNextStory(c, req)
+		if err != nil {
+			c.JSON(400, gin.H{"error": err.Error()})
+			return
+		}
+		nextId = story.FirstBlockID
 	}
 	nextId = req.NextID
 

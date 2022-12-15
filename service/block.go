@@ -16,6 +16,9 @@ func GetNextBlock(c *gin.Context, nextId string) (domain.Block, error) {
 	return *block, nil
 }
 
-func GetNextStory(c *gin.Context) (*domain.Story, error) {
+func GetNextStory(c *gin.Context, req domain.ApiRequest) (*domain.Story, error) {
+	userID := c.GetString("userID")
+	print(userID)
+	// TODO: get next story
 	return &domain.Story{}, nil
 }
