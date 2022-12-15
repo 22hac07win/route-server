@@ -4,7 +4,7 @@ import (
 	"context"
 	firebase "firebase.google.com/go/v4"
 	"fmt"
-	"github.com/22hac07win/route-server.git/router"
+	"github.com/22hac07win/route-server.git/handler"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/oauth2/google"
@@ -120,7 +120,7 @@ func main() {
 			})
 		})
 
-		api.POST("/message", func(c *gin.Context) { router.PostMessage(c) })
+		api.POST("/message", func(c *gin.Context) { handler.PostMessage(c) })
 	}
 
 	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
