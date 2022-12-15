@@ -4,3 +4,6 @@ startup: |
   go build -o main
 entrypoint: ./main
 http_proxy: 8080
+
+main:
+  expose: 8080
