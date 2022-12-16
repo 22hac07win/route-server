@@ -3,16 +3,16 @@ package db
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/22hac07win/route-server.git/domain"
 	"github.com/gin-gonic/gin"
 	"io"
 	"net/http"
 )
 
-func (s *SupabaseDBClient) GetAllDBStory(c *gin.Context) ([]*DBStory, error) {
+func (s *SupabaseDBClient) GetAllDBStory(c *gin.Context) ([]*domain.Story, error) {
 	url := fmt.Sprintf("%s/rest/v1/story/select=*", s.Url)
-	req, _ := http.NewRequest("GET", url, nil)
-	req.Header.Add("ApiKey", s.ApiKey)
-	req.Header.Add("Authorization", "Bearer "+s.ApiKey)
+
+	req := s.NewGetHttpRequest(url)
 
 	client := new(http.Client)
 	resp, err := client.Do(req)
@@ -20,7 +20,7 @@ func (s *SupabaseDBClient) GetAllDBStory(c *gin.Context) ([]*DBStory, error) {
 		return nil, err
 	}
 
-	var storys []DBStory
+	var storys []domain.Story
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
@@ -32,7 +32,7 @@ func (s *SupabaseDBClient) GetAllDBStory(c *gin.Context) ([]*DBStory, error) {
 		return nil, err
 	}
 
-	var res []*DBStory
+	var res []*domain.Story
 	for _, story := range storys {
 		res = append(res, &story)
 	}

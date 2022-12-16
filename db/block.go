@@ -2,72 +2,50 @@ package db
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/22hac07win/route-server.git/domain"
 	"github.com/gin-gonic/gin"
-	"io"
-	"net/http"
 )
 
-func (s *SupabaseDBClient) GetBlock(c *gin.Context, blocId string) (*domain.Block, error) {
-	b, err := s.GetDBBlock(c, blocId)
+func (s *SupabaseDBClient) GetTextBlock(c *gin.Context, id string) (*domain.TextBlock, error) {
+	byte, err := s.ReadEqContent(c, TextBlockTable, TextBlockTableColumns.ID, id)
 	if err != nil {
 		return nil, err
 	}
 
-	var res domain.Block
-
-	switch b.BlockType {
-	case domain.TextBlockType:
-		res = &domain.TextBlock{
-			ID:      b.ID,
-			StoryID: b.StoryID,
-			Text:    b.Text,
-			NextID:  b.NextID,
-		}
-	case domain.FunctionBlockType:
-		fn, err := b.GetFunction(b.Func)
-		if err != nil {
-			return nil, err
-		}
-
-		res = &domain.FunctionBlock{
-			ID:       b.ID,
-			StoryID:  b.StoryID,
-			Function: fn,
-			NextID:   b.NextID,
-		}
-
-	case domain.OptionBlockType:
-		res = &domain.OptionBlock{
-			ID:      b.ID,
-			StoryID: b.StoryID,
-			Text:    b.Text,
-			Options: b.Options,
-		}
-	}
-
-	return &res, nil
+	var res domain.TextBlock
+	err = json.Unmarshal(byte, &res)
+	return &res, err
 }
 
-func (s *SupabaseDBClient) GetDBBlock(c *gin.Context, blockId string) (*DBBlock, error) {
-	url := fmt.Sprintf("%s/rest/v1/block?id=eq.%s", s.Url, blockId)
-	req, _ := http.NewRequest("GET", url, nil)
-	req.Header.Add("ApiKey", s.ApiKey)
-	req.Header.Add("Authorization", "Bearer "+s.ApiKey)
-
-	client := new(http.Client)
-	resp, err := client.Do(req)
+func (s *SupabaseDBClient) GetFuncBlock(c *gin.Context, id string) (*domain.FunctionBlock, error) {
+	byte, err := s.ReadEqContent(c, FuncBlockTable, FuncBlockTableColumns.ID, id)
 	if err != nil {
 		return nil, err
 	}
 
-	var res DBBlock
-	body, err := io.ReadAll(resp.Body)
+	var res domain.FunctionBlock
+	err = json.Unmarshal(byte, &res)
+	return &res, err
+}
+
+func (s *SupabaseDBClient) GetInputBlock(c *gin.Context, id string) (*domain.InputBlock, error) {
+	byte, err := s.ReadEqContent(c, InputBlockTable, InputBlockTableColumns.ID, id)
 	if err != nil {
 		return nil, err
 	}
 
-	err = json.Unmarshal(body, &res)
+	var res domain.InputBlock
+	err = json.Unmarshal(byte, &res)
+	return &res, err
+}
+
+func (s *SupabaseDBClient) GetOptionBlock(c *gin.Context, id string) (*domain.OptionBlock, error) {
+	byte, err := s.ReadEqContent(c, OptBlockTable, OptBlockTableColumns.ID, id)
+	if err != nil {
+		return nil, err
+	}
+
+	var res domain.OptionBlock
+	err = json.Unmarshal(byte, &res)
 	return &res, err
 }

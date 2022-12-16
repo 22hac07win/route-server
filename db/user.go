@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/22hac07win/route-server.git/domain"
 	"github.com/gin-gonic/gin"
 	"io"
 	"net/http"
@@ -12,7 +13,7 @@ import (
 func (s *SupabaseDBClient) InsertDBUser(c *gin.Context, userID string) error {
 	url := fmt.Sprintf("%s/rest/v1/user", s.Url)
 
-	user := InsertDBUser{
+	user := InsertUser{
 		ID: userID,
 	}
 
@@ -23,12 +24,7 @@ func (s *SupabaseDBClient) InsertDBUser(c *gin.Context, userID string) error {
 
 	reader := bytes.NewReader(body)
 
-	req, _ := http.NewRequest("POST", url, reader)
-
-	req.Header.Add("ApiKey", s.ApiKey)
-	req.Header.Add("Authorization", "Bearer "+s.ApiKey)
-	req.Header.Add("Content-Type", "application/json")
-	req.Header.Add("Prefer", "return=minimal")
+	req := s.NewPostHttpRequest(url, reader)
 
 	client := new(http.Client)
 	_, err = client.Do(req)
@@ -36,12 +32,10 @@ func (s *SupabaseDBClient) InsertDBUser(c *gin.Context, userID string) error {
 	return err
 }
 
-func (s *SupabaseDBClient) GetDBUser(c *gin.Context, userID string) (*DBUser, error) {
+func (s *SupabaseDBClient) GetDBUser(c *gin.Context, userID string) (*domain.User, error) {
 	url := fmt.Sprintf("%s/rest/v1/user?id=eq.%s", s.Url, userID)
 
-	req, _ := http.NewRequest("GET", url, nil)
-	req.Header.Add("ApiKey", s.ApiKey)
-	req.Header.Add("Authorization", "Bearer "+s.ApiKey)
+	req := s.NewGetHttpRequest(url)
 
 	client := new(http.Client)
 	resp, err := client.Do(req)
@@ -49,7 +43,7 @@ func (s *SupabaseDBClient) GetDBUser(c *gin.Context, userID string) (*DBUser, er
 		return nil, err
 	}
 
-	var res []DBUser
+	var res []domain.User
 	body, err := io.ReadAll(resp.Body)
 
 	if err != nil {

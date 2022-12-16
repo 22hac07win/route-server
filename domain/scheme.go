@@ -1,8 +1,13 @@
 package domain
 
+type Input struct {
+	Key  string
+	Body string
+}
+
 type ApiRequest struct {
 	NextID     string `json:"nextId"`
-	Input      string `json:"input"`
+	Input      Input  `json:"input"`
 	OptionText string `json:"option"`
 }
 
@@ -16,7 +21,7 @@ type ApiResponse struct {
 	ID        string      `json:"id"`
 	BlockType BlockType   `json:"blockType"`
 	Text      string      `json:"text"`
-	HaveInput bool        `json:"haveInput"`
+	InputKey  bool        `json:"InputKey"`
 	Options   []ResOption `json:"options"`
 	NextID    string      `json:"nextId"`
 }

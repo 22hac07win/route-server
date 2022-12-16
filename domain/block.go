@@ -5,7 +5,7 @@ func (b *TextBlock) GetContent() (*ApiResponse, error) {
 		ID:        b.ID,
 		BlockType: TextBlockType,
 		Text:      b.Text,
-		HaveInput: false,
+		InputKey:  false,
 		NextID:    b.NextID,
 	}
 	return res, nil
@@ -24,7 +24,7 @@ func (b *FunctionBlock) GetContent() (*ApiResponse, error) {
 		ID:        b.ID,
 		BlockType: FunctionBlockType,
 		Text:      text,
-		HaveInput: false,
+		InputKey:  false,
 		NextID:    b.NextID,
 	}
 	return res, nil
@@ -35,7 +35,7 @@ func (b *InputBlock) GetContent() (*ApiResponse, error) {
 		ID:        b.ID,
 		BlockType: InputBlockType,
 		Text:      b.Text,
-		HaveInput: true,
+		InputKey:  true,
 		NextID:    b.NextID,
 	}
 	return res, nil
@@ -56,7 +56,7 @@ func (b *OptionBlock) GetContent() (*ApiResponse, error) {
 		ID:        b.ID,
 		BlockType: OptionBlockType,
 		Text:      b.Text,
-		HaveInput: false,
+		InputKey:  false,
 		Options:   opts,
 	}
 	return res, nil

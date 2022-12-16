@@ -4,12 +4,13 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/22hac07win/route-server.git/domain"
 	"github.com/gin-gonic/gin"
 	"io"
 	"net/http"
 )
 
-func (s *SupabaseDBClient) AddDBStore(c *gin.Context, data *DBStore) error {
+func (s *SupabaseDBClient) AddDBStore(c *gin.Context, data *domain.Store) error {
 	url := fmt.Sprintf("%s/rest/v1/store", s.Url)
 	body, err := json.Marshal(data)
 	if err != nil {
@@ -17,12 +18,7 @@ func (s *SupabaseDBClient) AddDBStore(c *gin.Context, data *DBStore) error {
 	}
 	reader := bytes.NewReader(body)
 
-	req, _ := http.NewRequest("POST", url, reader)
-
-	req.Header.Add("ApiKey", s.ApiKey)
-	req.Header.Add("Authorization", "Bearer "+s.ApiKey)
-	req.Header.Add("Content-Type", "application/json")
-	req.Header.Add("Prefer", "return=minimal")
+	req := s.NewPostHttpRequest(url, reader)
 
 	client := new(http.Client)
 	_, err = client.Do(req)
@@ -30,11 +26,9 @@ func (s *SupabaseDBClient) AddDBStore(c *gin.Context, data *DBStore) error {
 	return err
 }
 
-func (s *SupabaseDBClient) GetDBStore(c *gin.Context, userID string, key string) (*DBStore, error) {
+func (s *SupabaseDBClient) GetDBStore(c *gin.Context, userID string, key string) (*domain.Store, error) {
 	url := fmt.Sprintf("%s/rest/v1/store?user_id=eq.%s&key=eq.%s&order=id.desc&limit=1", s.Url, userID, key)
-	req, _ := http.NewRequest("GET", url, nil)
-	req.Header.Add("ApiKey", s.ApiKey)
-	req.Header.Add("Authorization", "Bearer "+s.ApiKey)
+	req := s.NewGetHttpRequest(url)
 
 	client := new(http.Client)
 	resp, err := client.Do(req)
@@ -42,7 +36,7 @@ func (s *SupabaseDBClient) GetDBStore(c *gin.Context, userID string, key string)
 		return nil, err
 	}
 
-	var res DBStore
+	var res domain.Store
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
