@@ -56,7 +56,7 @@ func (s *SupabaseDBClient) GetDBUser(c *gin.Context, userID string) (*DBUser, er
 		return nil, err
 	}
 
-	json.Unmarshal(body, &res)
+	err = json.Unmarshal(body, &res)
 
-	return &res[0], nil
+	return &res[0], err
 }

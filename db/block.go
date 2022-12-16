@@ -68,6 +68,6 @@ func (s *SupabaseDBClient) GetDBBlock(c *gin.Context, blockId string) (*DBBlock,
 		return nil, err
 	}
 
-	json.Unmarshal(body, &res)
-	return &res, nil
+	err = json.Unmarshal(body, &res)
+	return &res, err
 }

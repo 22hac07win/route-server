@@ -30,8 +30,8 @@ func (s *SupabaseDBClient) AddDBStore(c *gin.Context, data *DBStore) error {
 	return err
 }
 
-func (s *SupabaseDBClient) GetRecentDBStore(c *gin.Context, userID string) (*DBUser, error) {
-	url := fmt.Sprintf("%s/rest/v1/store?user_id=eq.%s&order=id.desc&limit=10", s.Url, userID)
+func (s *SupabaseDBClient) GetDBStore(c *gin.Context, userID string, key string) (*DBStore, error) {
+	url := fmt.Sprintf("%s/rest/v1/store?user_id=eq.%s&key=eq.%s&order=id.desc&limit=1", s.Url, userID, key)
 	req, _ := http.NewRequest("GET", url, nil)
 	req.Header.Add("ApiKey", s.ApiKey)
 	req.Header.Add("Authorization", "Bearer "+s.ApiKey)
@@ -42,12 +42,12 @@ func (s *SupabaseDBClient) GetRecentDBStore(c *gin.Context, userID string) (*DBU
 		return nil, err
 	}
 
-	var res DBUser
+	var res DBStore
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
 
-	json.Unmarshal(body, &res)
-	return &res, nil
+	err = json.Unmarshal(body, &res)
+	return &res, err
 }

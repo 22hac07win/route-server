@@ -63,5 +63,6 @@ type DBStore struct {
 	ID        string    `json:"id"`
 	StoreType StoreType `json:"store_type"`
 	UserID    string    `json:"user_id"`
+	Key       string    `json:"key"`
 	Body      string    `json:"body"`
 }

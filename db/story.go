@@ -26,7 +26,11 @@ func (s *SupabaseDBClient) GetAllDBStory(c *gin.Context) ([]*DBStory, error) {
 		return nil, err
 	}
 
-	json.Unmarshal(body, &storys)
+	err = json.Unmarshal(body, &storys)
+
+	if err != nil {
+		return nil, err
+	}
 
 	var res []*DBStory
 	for _, story := range storys {
