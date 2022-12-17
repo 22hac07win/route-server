@@ -1,31 +1,28 @@
 package domain
 
 import (
-	"errors"
 	"fmt"
 )
 
-func (fb *FunctionBlock) GetFunction(name string) (BlockFunc, error) {
-	switch name {
+func (fb *FunctionBlock) GenerateText() (string, error) {
+	switch fb.Function {
 	case "SetArgsFunc":
-		return SetArgsFunc, nil
+		return fb.SetArgsFunc()
 	default:
-		return NullResFunc, errors.New("Function not found")
+		return fb.NullResFunc()
 	}
 }
 
-var SetArgsFunc = func(args ...any) (string, error) {
-	text, ok := args[0].(string)
-	if !ok {
-		return "", errors.New("Invalid argument type")
+func (fb *FunctionBlock) SetArgsFunc() (string, error) {
+
+	var args []any
+	for _, arg := range fb.Args {
+		args = append(args, arg)
 	}
-
-	args = args[1:]
-
-	res := fmt.Sprintf(text, args...)
+	res := fmt.Sprintf(fb.Text, args...)
 	return res, nil
 }
 
-var NullResFunc = func(_ ...any) (string, error) {
-	return "", nil
+func (fb *FunctionBlock) NullResFunc() (string, error) {
+	return "", ErrFuncitonNotFound
 }

@@ -13,9 +13,7 @@ func (b *TextBlock) GetContent() (*ApiResponse, error) {
 
 func (b *FunctionBlock) GetContent() (*ApiResponse, error) {
 
-	f := b.Function
-	text, err := f()
-
+	text, err := b.GenerateText()
 	if err != nil {
 		return nil, err
 	}

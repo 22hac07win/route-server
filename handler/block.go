@@ -25,13 +25,7 @@ func PostMessage(c *gin.Context) {
 	}
 	nextId = req.NextID
 
-	block, err := service.GetNextBlock(c, nextId)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	res, err := block.GetContent()
+	res, err := service.GetNextBlockContent(c, nextId)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

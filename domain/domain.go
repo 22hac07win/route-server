@@ -39,15 +39,13 @@ type TextBlock struct {
 	NextID  string `json:"next_id"`
 }
 
-type BlockFunc func(args ...any) (string, error)
-
 type FunctionBlock struct {
-	ID       string    `json:"id"`
-	StoryID  string    `json:"story_id"`
-	Text     string    `json:"text"`
-	Function BlockFunc `json:"function"`
-	Args     []string  `json:"args"`
-	NextID   string    `json:"next_id"`
+	ID       string   `json:"id"`
+	StoryID  string   `json:"story_id"`
+	Text     string   `json:"text"`
+	Function string   `json:"function"`
+	Args     []string `json:"args"`
+	NextID   string   `json:"next_id"`
 }
 
 type InputBlock struct {
