@@ -1,6 +1,7 @@
 package service
 
 import (
+	"fmt"
 	"github.com/22hac07win/route-server.git/domain"
 	"github.com/22hac07win/route-server.git/repository"
 	"github.com/gin-gonic/gin"
@@ -48,34 +49,42 @@ func (rp *routeProvider) GetNextBlockContent(c *gin.Context, nextID string) (*do
 }
 
 func (rp *routeProvider) GetNextStory(c *gin.Context, userID string) (*domain.Story, error) {
+
 	user, err := rp.s.GetUser(c, userID)
 	if err != nil {
 		return nil, err
 	}
 
-	stories, err := rp.s.GetAllStory(c)
+	fmt.Println("pass")
+
+	str, err := rp.s.GetAllStory(c)
 	if err != nil {
 		return nil, err
 	}
 
+	fmt.Println(str)
 	var res *domain.Story
 	if user.State == domain.StartState {
-		for _, story := range stories {
-			if story.FireIf == domain.StartIf {
-				res = story
+		for _, v := range str {
+			if v.FireIf == "start" {
+				res = &v
 				break
 			}
 		}
 	} else if user.State == domain.LifeState {
-		var s []*domain.Story
-		for _, story := range stories {
-			if story.FireIf == domain.RandomIf {
-				s = append(s, story)
+		var s []domain.Story
+		for _, v := range str {
+			if v.FireIf == "random" {
+				s = append(s, v)
 			}
 		}
 
 		rand.Seed(time.Now().UnixNano())
-		res = s[rand.Intn(len(s))]
+		res = &s[rand.Intn(len(s))]
+	}
+
+	if res == nil {
+		return nil, ErrNotFoundStory
 	}
 
 	return res, nil

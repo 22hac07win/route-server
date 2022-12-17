@@ -22,7 +22,7 @@ type SupabaseDBClient interface {
 	GetFuncBlock(c *gin.Context, id string) (*domain.FunctionBlock, error)
 	GetInputBlock(c *gin.Context, id string) (*domain.InputBlock, error)
 	GetOptionBlock(c *gin.Context, id string) (*domain.OptionBlock, error)
-	GetAllStory(c *gin.Context) ([]*domain.Story, error)
+	GetAllStory(c *gin.Context) ([]domain.Story, error)
 	UpsertUser(c *gin.Context, userID string, state string) error
 	GetUser(c *gin.Context, userID string) (*domain.User, error)
 	UpsertStore(c *gin.Context, data *UpsertStore) error
@@ -130,7 +130,6 @@ func (s *supabaseDBClient) ReadAllContent(c *gin.Context, table TableName) ([]by
 
 	fmt.Printf("%+v\n", resp)
 	body, err := io.ReadAll(resp.Body)
-	fmt.Println(string(body))
 	if err != nil {
 		return nil, err
 	}

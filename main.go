@@ -104,16 +104,20 @@ func main() {
 		AllowCredentials: true,
 	}))
 
+	s := repository.NewSupabaseDBClient()
+	rp := service.NewRouteProvider(s)
+	rh := handler.NewRouteHandler(rp)
+
 	r.GET("/ping", func(c *gin.Context) {
 		log.Println("pass")
 		c.JSON(http.StatusOK, gin.H{
 			"message": "pong",
 		})
 	})
-
-	s := repository.NewSupabaseDBClient()
-	rp := service.NewRouteProvider(s)
-	rh := handler.NewRouteHandler(rp)
+	r.POST("/message", func(c *gin.Context) {
+		c.Set("userID", "test-user1")
+		rh.PostMessage(c)
+	})
 
 	api := r.Group("/api")
 	api.Use(authMiddleware())

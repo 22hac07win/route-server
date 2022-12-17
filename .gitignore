@@ -20,3 +20,9 @@ localtest.go
 *.json
 
 env.sh
+
+tmp
+
+Dockerfile
+docker-compose.yaml
+.air.toml

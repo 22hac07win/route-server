@@ -7,25 +7,25 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (s *supabaseDBClient) GetAllStory(c *gin.Context) ([]*domain.Story, error) {
+func (s *supabaseDBClient) GetAllStory(c *gin.Context) ([]domain.Story, error) {
 
 	body, err := s.ReadAllContent(c, StoryTable)
 	if err != nil {
 		return nil, err
 	}
 
-	var stories []domain.Story
-	err = json.Unmarshal(body, &stories)
-
-	fmt.Println(stories)
+	var str []domain.Story
+	print(string(body))
+	err = json.Unmarshal(body, &str)
 
 	if err != nil {
 		return nil, err
 	}
 
-	var res []*domain.Story
-	for _, story := range stories {
-		res = append(res, &story)
+	fmt.Println(str)
+	var res []domain.Story
+	for _, v := range str {
+		res = append(res, v)
 	}
 
 	return res, nil

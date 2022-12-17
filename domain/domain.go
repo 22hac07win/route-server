@@ -27,7 +27,7 @@ const (
 type Story struct {
 	ID           string `json:"id"`
 	Title        string `json:"title"`
-	FireIf       FireIf `json:"fire_if"`
+	FireIf       string `json:"fire_if"`
 	FirstBlockID string `json:"first_block_id"`
 }
 

@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/22hac07win/route-server.git/domain"
@@ -18,11 +19,17 @@ func NewRouteHandler(rp service.RouteProvider) *routeHandler {
 
 func (rh *routeHandler) PostMessage(c *gin.Context) {
 	var req domain.ApiRequest
+
+	fmt.Println("PostMessage")
+
 	if err := c.BindJSON(&req); err != nil {
+		fmt.Println("BindJSON error")
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
-	var nextId string
+
+	var nextID string
+	nextID = req.NextID
 	if req.NextID == "" {
 		userID := c.GetString("userID")
 		story, err := rh.rp.GetNextStory(c, userID)
@@ -30,11 +37,11 @@ func (rh *routeHandler) PostMessage(c *gin.Context) {
 			c.JSON(400, gin.H{"error": err.Error()})
 			return
 		}
-		nextId = story.FirstBlockID
+		nextID = story.FirstBlockID
+		fmt.Println("nextId", nextID)
 	}
-	nextId = req.NextID
 
-	res, err := rh.rp.GetNextBlockContent(c, nextId)
+	res, err := rh.rp.GetNextBlockContent(c, nextID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
