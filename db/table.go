@@ -86,3 +86,15 @@ var OptBlockTableColumns = struct {
 	Text:    "text",
 	Options: "options",
 }
+
+var StoreTableColumns = struct {
+	UserID    string
+	Key       string
+	StoreType string
+	Body      string
+}{
+	UserID:    "user_id",
+	Key:       "key",
+	StoreType: "store_type",
+	Body:      "body",
+}

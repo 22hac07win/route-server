@@ -12,9 +12,9 @@ func (s *SupabaseDBClient) GetTextBlock(c *gin.Context, id string) (*domain.Text
 		return nil, err
 	}
 
-	var res domain.TextBlock
+	var res []domain.TextBlock
 	err = json.Unmarshal(byte, &res)
-	return &res, err
+	return &res[0], err
 }
 
 func (s *SupabaseDBClient) GetFuncBlock(c *gin.Context, id string) (*domain.FunctionBlock, error) {
@@ -23,9 +23,9 @@ func (s *SupabaseDBClient) GetFuncBlock(c *gin.Context, id string) (*domain.Func
 		return nil, err
 	}
 
-	var res domain.FunctionBlock
+	var res []domain.FunctionBlock
 	err = json.Unmarshal(byte, &res)
-	return &res, err
+	return &res[0], err
 }
 
 func (s *SupabaseDBClient) GetInputBlock(c *gin.Context, id string) (*domain.InputBlock, error) {
@@ -34,9 +34,9 @@ func (s *SupabaseDBClient) GetInputBlock(c *gin.Context, id string) (*domain.Inp
 		return nil, err
 	}
 
-	var res domain.InputBlock
+	var res []domain.InputBlock
 	err = json.Unmarshal(byte, &res)
-	return &res, err
+	return &res[0], err
 }
 
 func (s *SupabaseDBClient) GetOptionBlock(c *gin.Context, id string) (*domain.OptionBlock, error) {
@@ -45,7 +45,7 @@ func (s *SupabaseDBClient) GetOptionBlock(c *gin.Context, id string) (*domain.Op
 		return nil, err
 	}
 
-	var res domain.OptionBlock
+	var res []domain.OptionBlock
 	err = json.Unmarshal(byte, &res)
-	return &res, err
+	return &res[0], err
 }

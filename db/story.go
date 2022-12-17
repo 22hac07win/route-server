@@ -5,35 +5,26 @@ import (
 	"fmt"
 	"github.com/22hac07win/route-server.git/domain"
 	"github.com/gin-gonic/gin"
-	"io"
-	"net/http"
 )
 
-func (s *SupabaseDBClient) GetAllDBStory(c *gin.Context) ([]*domain.Story, error) {
-	url := fmt.Sprintf("%s/rest/v1/story/select=*", s.Url)
+func (s *SupabaseDBClient) GetAllStory(c *gin.Context) ([]*domain.Story, error) {
 
-	req := s.NewGetHttpRequest(url)
-
-	client := new(http.Client)
-	resp, err := client.Do(req)
+	body, err := s.ReadAllContent(c, StoryTable)
 	if err != nil {
 		return nil, err
 	}
 
-	var storys []domain.Story
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
+	var stories []domain.Story
+	err = json.Unmarshal(body, &stories)
 
-	err = json.Unmarshal(body, &storys)
+	fmt.Println(stories)
 
 	if err != nil {
 		return nil, err
 	}
 
 	var res []*domain.Story
-	for _, story := range storys {
+	for _, story := range stories {
 		res = append(res, &story)
 	}
 
