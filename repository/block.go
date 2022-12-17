@@ -1,4 +1,4 @@
-package db
+package repository
 
 import (
 	"encoding/json"
@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func (s *SupabaseDBClient) GetNextBlock(c *gin.Context, nextId string) (domain.Block, error) {
+func (s *supabaseDBClient) GetNextBlock(c *gin.Context, nextId string) (domain.Block, error) {
 
 	slice := strings.Split(nextId, "-")
 
@@ -28,7 +28,7 @@ func (s *SupabaseDBClient) GetNextBlock(c *gin.Context, nextId string) (domain.B
 	return nil, ErrInvalidID
 }
 
-func (s *SupabaseDBClient) GetTextBlock(c *gin.Context, id string) (*domain.TextBlock, error) {
+func (s *supabaseDBClient) GetTextBlock(c *gin.Context, id string) (*domain.TextBlock, error) {
 	byte, err := s.ReadEqContent(c, TextBlockTable, TextBlockTableColumns.ID, id)
 	if err != nil {
 		return nil, err
@@ -43,7 +43,7 @@ func (s *SupabaseDBClient) GetTextBlock(c *gin.Context, id string) (*domain.Text
 	return &res[0], err
 }
 
-func (s *SupabaseDBClient) GetFuncBlock(c *gin.Context, id string) (*domain.FunctionBlock, error) {
+func (s *supabaseDBClient) GetFuncBlock(c *gin.Context, id string) (*domain.FunctionBlock, error) {
 	byte, err := s.ReadEqContent(c, FuncBlockTable, FuncBlockTableColumns.ID, id)
 	if err != nil {
 		return nil, err
@@ -58,7 +58,7 @@ func (s *SupabaseDBClient) GetFuncBlock(c *gin.Context, id string) (*domain.Func
 	return &res[0], err
 }
 
-func (s *SupabaseDBClient) GetInputBlock(c *gin.Context, id string) (*domain.InputBlock, error) {
+func (s *supabaseDBClient) GetInputBlock(c *gin.Context, id string) (*domain.InputBlock, error) {
 	byte, err := s.ReadEqContent(c, InputBlockTable, InputBlockTableColumns.ID, id)
 	if err != nil {
 		return nil, err
@@ -73,7 +73,7 @@ func (s *SupabaseDBClient) GetInputBlock(c *gin.Context, id string) (*domain.Inp
 	return &res[0], err
 }
 
-func (s *SupabaseDBClient) GetOptionBlock(c *gin.Context, id string) (*domain.OptionBlock, error) {
+func (s *supabaseDBClient) GetOptionBlock(c *gin.Context, id string) (*domain.OptionBlock, error) {
 	byte, err := s.ReadEqContent(c, OptBlockTable, OptBlockTableColumns.ID, id)
 	if err != nil {
 		return nil, err

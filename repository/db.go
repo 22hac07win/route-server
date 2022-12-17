@@ -1,4 +1,4 @@
-package db
+package repository
 
 import (
 	"bytes"
@@ -10,16 +10,35 @@ import (
 	"os"
 )
 
-type SupabaseDBClient struct {
+type SupabaseDBClient interface {
+	ReadEqContent(c *gin.Context, table TableName, col string, value string) ([]byte, error)
+	ReadMultiEqContent(c *gin.Context, table TableName, args []ReadMultiEqArg) ([]byte, error)
+	ReadAllContent(c *gin.Context, table TableName) ([]byte, error)
+	UpsertContent(c *gin.Context, table TableName, body []byte) error
+	NewGetHttpRequest(url string) *http.Request
+	NewUpsertPostHttpRequest(url string, reader *bytes.Reader) *http.Request
+	GetNextBlock(c *gin.Context, nextId string) (domain.Block, error)
+	GetTextBlock(c *gin.Context, id string) (*domain.TextBlock, error)
+	GetFuncBlock(c *gin.Context, id string) (*domain.FunctionBlock, error)
+	GetInputBlock(c *gin.Context, id string) (*domain.InputBlock, error)
+	GetOptionBlock(c *gin.Context, id string) (*domain.OptionBlock, error)
+	GetAllStory(c *gin.Context) ([]*domain.Story, error)
+	UpsertUser(c *gin.Context, userID string, state string) error
+	GetUser(c *gin.Context, userID string) (*domain.User, error)
+	UpsertStore(c *gin.Context, data *UpsertStore) error
+	GetStore(c *gin.Context, userID string, key string) (*domain.Store, error)
+}
+
+type supabaseDBClient struct {
 	Url    string
 	ApiKey string
 }
 
-func NewSupabaseDBClient() *SupabaseDBClient {
+func NewSupabaseDBClient() *supabaseDBClient {
 	url := os.Getenv("SUPABASE_URL")
 	ApiKey := os.Getenv("SUPABASE_API_KEY")
 
-	return &SupabaseDBClient{
+	return &supabaseDBClient{
 		Url:    url,
 		ApiKey: ApiKey,
 	}
@@ -37,7 +56,7 @@ type UpsertStore struct {
 	Body      string           `json:"body"`
 }
 
-func (s *SupabaseDBClient) ReadEqContent(c *gin.Context, table TableName, col string, value string) ([]byte, error) {
+func (s *supabaseDBClient) ReadEqContent(c *gin.Context, table TableName, col string, value string) ([]byte, error) {
 	url := fmt.Sprintf("%s/rest/v1/%s?%s=eq.%s", s.Url, table, col, value)
 	req := s.NewGetHttpRequest(url)
 
@@ -61,7 +80,7 @@ type ReadMultiEqArg struct {
 	Value string
 }
 
-func (s *SupabaseDBClient) ReadMultiEqContent(c *gin.Context, table TableName, args []ReadMultiEqArg) ([]byte, error) {
+func (s *supabaseDBClient) ReadMultiEqContent(c *gin.Context, table TableName, args []ReadMultiEqArg) ([]byte, error) {
 
 	query := ""
 	for i, q := range args {
@@ -95,7 +114,7 @@ func (s *SupabaseDBClient) ReadMultiEqContent(c *gin.Context, table TableName, a
 	return body, nil
 }
 
-func (s *SupabaseDBClient) ReadAllContent(c *gin.Context, table TableName) ([]byte, error) {
+func (s *supabaseDBClient) ReadAllContent(c *gin.Context, table TableName) ([]byte, error) {
 	url := fmt.Sprintf("%s/rest/v1/%s?select=*", s.Url, table)
 	fmt.Println(url)
 
@@ -118,7 +137,7 @@ func (s *SupabaseDBClient) ReadAllContent(c *gin.Context, table TableName) ([]by
 	return body, nil
 }
 
-func (s *SupabaseDBClient) UpsertContent(c *gin.Context, table TableName, body []byte) error {
+func (s *supabaseDBClient) UpsertContent(c *gin.Context, table TableName, body []byte) error {
 
 	url := fmt.Sprintf("%s/rest/v1/%s", s.Url, table)
 	reader := bytes.NewReader(body)
@@ -131,7 +150,7 @@ func (s *SupabaseDBClient) UpsertContent(c *gin.Context, table TableName, body [
 	return err
 }
 
-func (s *SupabaseDBClient) NewGetHttpRequest(url string) *http.Request {
+func (s *supabaseDBClient) NewGetHttpRequest(url string) *http.Request {
 	req, _ := http.NewRequest("GET", url, nil)
 	req.Header.Add("ApiKey", s.ApiKey)
 	req.Header.Add("Authorization", "Bearer "+s.ApiKey)
@@ -139,7 +158,7 @@ func (s *SupabaseDBClient) NewGetHttpRequest(url string) *http.Request {
 	return req
 }
 
-func (s *SupabaseDBClient) NewUpsertPostHttpRequest(url string, reader *bytes.Reader) *http.Request {
+func (s *supabaseDBClient) NewUpsertPostHttpRequest(url string, reader *bytes.Reader) *http.Request {
 	req, _ := http.NewRequest("POST", url, reader)
 
 	req.Header.Add("ApiKey", s.ApiKey)

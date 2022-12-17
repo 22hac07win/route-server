@@ -1,4 +1,4 @@
-package db
+package repository
 
 import (
 	"encoding/json"
@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (s *SupabaseDBClient) GetAllStory(c *gin.Context) ([]*domain.Story, error) {
+func (s *supabaseDBClient) GetAllStory(c *gin.Context) ([]*domain.Story, error) {
 
 	body, err := s.ReadAllContent(c, StoryTable)
 	if err != nil {

@@ -4,13 +4,25 @@ import (
 	"time"
 )
 
+type State string
+
+const (
+	StartState = "start"
+	LifeState  = "life"
+)
+
 type User struct {
 	ID        string    `json:"id"`
 	CreatedAt time.Time `json:"created_at"`
-	State     string    `json:"state"`
+	State     State     `json:"state"`
 }
 
 type FireIf string
+
+const (
+	StartIf  FireIf = "start"
+	RandomIf FireIf = "random"
+)
 
 type Story struct {
 	ID           string `json:"id"`

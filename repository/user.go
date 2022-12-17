@@ -1,4 +1,4 @@
-package db
+package repository
 
 import (
 	"encoding/json"
@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (s *SupabaseDBClient) UpsertUser(c *gin.Context, userID string, state string) error {
+func (s *supabaseDBClient) UpsertUser(c *gin.Context, userID string, state string) error {
 
 	user := UpsertUser{
 		ID:    userID,
@@ -22,7 +22,7 @@ func (s *SupabaseDBClient) UpsertUser(c *gin.Context, userID string, state strin
 	return err
 }
 
-func (s *SupabaseDBClient) GetUser(c *gin.Context, userID string) (*domain.User, error) {
+func (s *supabaseDBClient) GetUser(c *gin.Context, userID string) (*domain.User, error) {
 
 	body, err := s.ReadEqContent(c, UserTable, UserTableColumns.ID, userID)
 

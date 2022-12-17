@@ -1,4 +1,4 @@
-package db
+package repository
 
 import (
 	"encoding/json"
@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (s *SupabaseDBClient) UpsertStore(c *gin.Context, data *UpsertStore) error {
+func (s *supabaseDBClient) UpsertStore(c *gin.Context, data *UpsertStore) error {
 	body, err := json.Marshal(data)
 	if err != nil {
 		return err
@@ -16,7 +16,7 @@ func (s *SupabaseDBClient) UpsertStore(c *gin.Context, data *UpsertStore) error 
 	return err
 }
 
-func (s *SupabaseDBClient) GetStore(c *gin.Context, userID string, key string) (*domain.Store, error) {
+func (s *supabaseDBClient) GetStore(c *gin.Context, userID string, key string) (*domain.Store, error) {
 
 	args := []ReadMultiEqArg{
 		{Col: StoreTableColumns.UserID, Value: userID},

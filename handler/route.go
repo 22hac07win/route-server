@@ -8,7 +8,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func PostMessage(c *gin.Context) {
+type routeHandler struct {
+	rp service.RouteProvider
+}
+
+func NewRouteHandler(rp service.RouteProvider) *routeHandler {
+	return &routeHandler{rp: rp}
+}
+
+func (rh *routeHandler) PostMessage(c *gin.Context) {
 	var req domain.ApiRequest
 	if err := c.BindJSON(&req); err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
@@ -16,7 +24,8 @@ func PostMessage(c *gin.Context) {
 	}
 	var nextId string
 	if req.NextID == "" {
-		story, err := service.GetNextStory(c, req)
+		userID := c.GetString("userID")
+		story, err := rh.rp.GetNextStory(c, userID)
 		if err != nil {
 			c.JSON(400, gin.H{"error": err.Error()})
 			return
@@ -25,7 +34,7 @@ func PostMessage(c *gin.Context) {
 	}
 	nextId = req.NextID
 
-	res, err := service.GetNextBlockContent(c, nextId)
+	res, err := rh.rp.GetNextBlockContent(c, nextId)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

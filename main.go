@@ -5,6 +5,8 @@ import (
 	firebase "firebase.google.com/go/v4"
 	"fmt"
 	"github.com/22hac07win/route-server.git/handler"
+	"github.com/22hac07win/route-server.git/repository"
+	"github.com/22hac07win/route-server.git/service"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/oauth2/google"
@@ -109,6 +111,10 @@ func main() {
 		})
 	})
 
+	s := repository.NewSupabaseDBClient()
+	rp := service.NewRouteProvider(s)
+	rh := handler.NewRouteHandler(rp)
+
 	api := r.Group("/api")
 	api.Use(authMiddleware())
 	{
@@ -120,7 +126,7 @@ func main() {
 			})
 		})
 
-		api.POST("/message", func(c *gin.Context) { handler.PostMessage(c) })
+		api.POST("/message", func(c *gin.Context) { rh.PostMessage(c) })
 	}
 
 	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")

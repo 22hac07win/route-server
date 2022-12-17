@@ -1,4 +1,4 @@
-package db
+package repository
 
 type TableName string
 
