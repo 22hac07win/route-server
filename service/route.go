@@ -11,16 +11,22 @@ import (
 
 type RouteProvider interface {
 	CreateStore(c *gin.Context, userID string, input domain.Input) error
-	GetNextBlockContent(c *gin.Context, nextID string) (*domain.ApiResponse, error)
+	UpdateUser(c *gin.Context, userID string) error
 	GetNextStory(c *gin.Context, userID string) (*domain.Story, error)
+	GetNextBlock(c *gin.Context, userID string, nextID string) (*domain.ApiResponse, error)
+	GetTextBlockContent(c *gin.Context, b domain.TextBlock) (*domain.ApiResponse, error)
+	GetFuncBlockContent(c *gin.Context, userID string, b *domain.FunctionBlock) (*domain.ApiResponse, error)
+	GetInputBlockContent(c *gin.Context, b *domain.InputBlock) (*domain.ApiResponse, error)
+	GetOptionBlockContent(c *gin.Context, b *domain.OptionBlock) (*domain.ApiResponse, error)
 }
 
 type routeProvider struct {
-	s repository.SupabaseDBClient
+	s   repository.SupabaseDBClient
+	bfs BlockFuncService
 }
 
-func NewRouteProvider(s repository.SupabaseDBClient) *routeProvider {
-	return &routeProvider{s: s}
+func NewRouteProvider(s repository.SupabaseDBClient, bfs BlockFuncService) *routeProvider {
+	return &routeProvider{s: s, bfs: bfs}
 }
 
 func (rp *routeProvider) CreateStore(c *gin.Context, userID string, input domain.Input) error {
@@ -34,18 +40,9 @@ func (rp *routeProvider) CreateStore(c *gin.Context, userID string, input domain
 	return err
 }
 
-func (rp *routeProvider) GetNextBlockContent(c *gin.Context, nextID string) (*domain.ApiResponse, error) {
-
-	b, err := rp.s.GetNextBlock(c, nextID)
-	if err != nil {
-		return nil, err
-	}
-
-	content, err := b.GetContent()
-	if err != nil {
-		return nil, err
-	}
-	return content, nil
+func (rp *routeProvider) UpdateUser(c *gin.Context, userID string) error {
+	err := rp.s.UpsertUser(c, userID)
+	return err
 }
 
 func (rp *routeProvider) GetNextStory(c *gin.Context, userID string) (*domain.Story, error) {

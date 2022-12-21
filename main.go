@@ -9,11 +9,9 @@ import (
 	"github.com/22hac07win/route-server.git/service"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"golang.org/x/oauth2/google"
 	"google.golang.org/api/option"
 	"log"
 	"net/http"
-	"os"
 	"strings"
 )
 
@@ -22,17 +20,19 @@ func InitFirebase() *firebase.App {
 	var opt option.ClientOption
 	ctx := context.Background()
 
-	config := os.Getenv("FIREBASE_CONFIG")
+	/*
+		config := os.Getenv("FIREBASE_CONFIG")
 
-	if config != "" {
-		credentials, err := google.CredentialsFromJSON(ctx, []byte(config))
-		if err != nil {
-			log.Printf("error credentials from json: %v\n", err)
-		}
-		opt = option.WithCredentials(credentials)
-	} else {
-		opt = option.WithCredentialsFile("routeAccountKey.json")
-	}
+			if config != "" {
+				credentials, err := google.CredentialsFromJSON(ctx, []byte(config))
+				if err != nil {
+					log.Printf("error credentials from json: %v\n", err)
+				}
+				opt = option.WithCredentials(credentials)
+			} else {
+	*/
+	opt = option.WithCredentialsFile("routeAccountKey.json")
+	// }
 
 	app, err := firebase.NewApp(ctx, nil, opt)
 
@@ -105,7 +105,8 @@ func main() {
 	}))
 
 	s := repository.NewSupabaseDBClient()
-	rp := service.NewRouteProvider(s)
+	fbs := service.NewBlockFuncService(s)
+	rp := service.NewRouteProvider(s, fbs)
 	rh := handler.NewRouteHandler(rp)
 
 	r.GET("/ping", func(c *gin.Context) {
@@ -113,6 +114,10 @@ func main() {
 		c.JSON(http.StatusOK, gin.H{
 			"message": "pong",
 		})
+	})
+	r.GET("/init", func(c *gin.Context) {
+		c.Set("userID", "test-user1")
+		rh.GetInit(c)
 	})
 	r.POST("/message", func(c *gin.Context) {
 		c.Set("userID", "test-user1")
@@ -130,6 +135,7 @@ func main() {
 			})
 		})
 
+		api.GET("/init", func(c *gin.Context) { rh.GetInit(c) })
 		api.POST("/message", func(c *gin.Context) { rh.PostMessage(c) })
 	}
 

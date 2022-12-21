@@ -7,11 +7,28 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (s *supabaseDBClient) UpsertUser(c *gin.Context, userID string, state string) error {
+func (s *supabaseDBClient) UpsertUser(c *gin.Context, userID string) error {
 
 	user := UpsertUser{
+		ID: userID,
+	}
+
+	body, err := json.Marshal(user)
+	if err != nil {
+		return err
+	}
+
+	fmt.Println(string(body))
+
+	err = s.UpsertContent(c, UserTable, body)
+	return err
+}
+
+func (s *supabaseDBClient) ChangeUserState(c *gin.Context, userID string, state domain.State) error {
+
+	user := ChangeUserState{
 		ID:    userID,
-		State: state,
+		State: string(state),
 	}
 
 	body, err := json.Marshal(user)

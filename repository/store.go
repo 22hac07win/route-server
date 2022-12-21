@@ -2,11 +2,13 @@ package repository
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/22hac07win/route-server.git/domain"
 	"github.com/gin-gonic/gin"
 )
 
 func (s *supabaseDBClient) UpsertStore(c *gin.Context, data *UpsertStore) error {
+	fmt.Println("store:", data)
 	body, err := json.Marshal(data)
 	if err != nil {
 		return err

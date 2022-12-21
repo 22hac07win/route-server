@@ -19,6 +19,7 @@ localtest.go
 .idea
 *.json
 
+.env
 env.sh
 
 tmp

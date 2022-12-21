@@ -40,10 +40,6 @@ const (
 	OptionBlockType   BlockType = "option"
 )
 
-type Block interface {
-	GetContent() (*ApiResponse, error)
-}
-
 type TextBlock struct {
 	ID      string `json:"id"`
 	StoryID string `json:"story_id"`

@@ -17,16 +17,16 @@ type SupabaseDBClient interface {
 	UpsertContent(c *gin.Context, table TableName, body []byte) error
 	NewGetHttpRequest(url string) *http.Request
 	NewUpsertPostHttpRequest(url string, reader *bytes.Reader) *http.Request
-	GetNextBlock(c *gin.Context, nextId string) (domain.Block, error)
+	GetAllStory(c *gin.Context) ([]domain.Story, error)
+	UpsertUser(c *gin.Context, userID string) error
+	ChangeUserState(c *gin.Context, userID string, state domain.State) error
+	GetUser(c *gin.Context, userID string) (*domain.User, error)
+	UpsertStore(c *gin.Context, data *UpsertStore) error
+	GetStore(c *gin.Context, userID string, key string) (*domain.Store, error)
 	GetTextBlock(c *gin.Context, id string) (*domain.TextBlock, error)
 	GetFuncBlock(c *gin.Context, id string) (*domain.FunctionBlock, error)
 	GetInputBlock(c *gin.Context, id string) (*domain.InputBlock, error)
 	GetOptionBlock(c *gin.Context, id string) (*domain.OptionBlock, error)
-	GetAllStory(c *gin.Context) ([]domain.Story, error)
-	UpsertUser(c *gin.Context, userID string, state string) error
-	GetUser(c *gin.Context, userID string) (*domain.User, error)
-	UpsertStore(c *gin.Context, data *UpsertStore) error
-	GetStore(c *gin.Context, userID string, key string) (*domain.Store, error)
 }
 
 type supabaseDBClient struct {
@@ -45,6 +45,10 @@ func NewSupabaseDBClient() *supabaseDBClient {
 }
 
 type UpsertUser struct {
+	ID string `json:"id"`
+}
+
+type ChangeUserState struct {
 	ID    string `json:"id"`
 	State string `json:"state"`
 }
@@ -144,6 +148,9 @@ func (s *supabaseDBClient) UpsertContent(c *gin.Context, table TableName, body [
 	req := s.NewUpsertPostHttpRequest(url, reader)
 
 	client := new(http.Client)
+
+	fmt.Println(url)
+
 	_, err := client.Do(req)
 
 	return err
