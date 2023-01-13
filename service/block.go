@@ -47,6 +47,10 @@ func (rp *routeProvider) GetNextBlock(c *gin.Context, userID string, nextID stri
 }
 
 func (rp *routeProvider) GetTextBlockContent(c *gin.Context, b domain.TextBlock) (*domain.ApiResponse, error) {
+
+	// text := strings.Replace(b.Text, "\\n", "\n", -1)
+	// fmt.Println(text)
+
 	res := &domain.ApiResponse{
 		ID:        b.ID,
 		BlockType: domain.TextBlockType,
